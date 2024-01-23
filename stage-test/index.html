@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <div id="container" style="width: 480px;height: 360px;border: 2px solid pink;"></div>
+</head>
+
+<body>
+    <script src="https://unpkg.com/konva@9/konva.min.js"></script>
+    <script>
+        const state = {
+            stage: {
+                el: null,
+                width: 0,
+                height: 0
+            },
+            layerList: [],
+            spriteList: [
+                {
+                    costumes: [
+                        {
+                            "name": "calf-0",
+                            "path": "1.png",
+                            "x": 55,
+                            "y": 50
+                        }
+                    ],
+                    costumeIndex: 0,
+                    heading: 90,
+                    isDraggable: false,
+                    size: 1,
+                    visible: true,
+                    x: 0,
+                    y: 0,
+                    actualWidth: 110,
+                    actualHeight: 100,
+                    name: "Calf"
+                }
+            ]
+        }
+        const init = () => {
+            state.stage.el = document.getElementById('container')
+            state.stage.width = state.stage.el.clientWidth
+            state.stage.height = state.stage.el.clientHeight
+            state.stage.el = new Konva.Stage({
+                container: 'container',   // id of container <div>
+                width: state.stage.width,
+                height: state.stage.height,
+            })
+            state.layerList.push(new Konva.Layer())
+            state.stage.el.add(state.layerList[0])
+        }
+        const getPosition = ({ x, y }) => {
+            return {
+                x: state.stage.width / 2 + x,
+                y: state.stage.height / 2 + y,
+            }
+        }
+        init()
+
+        const draggableImgObj = new Image();
+        draggableImgObj.onload = function () {
+            const draggableImage = new Konva.Image({
+                image: draggableImgObj,
+                draggable: true,
+                offsetX: 55,
+                offsetY: 50,
+                ...getPosition({ x: 0, y: 0 })
+            });
+            draggableImage.on('transform', function () {
+                console.log(draggableImage.rotation())
+            });
+            var tr = new Konva.Transformer();
+            state.layerList[0].add(tr);
+            tr.nodes([draggableImage]);
+            state.layerList[0].add(draggableImage);
+            state.layerList[0].draw();
+        };
+        draggableImgObj.src = "./1.png"
+
+
+    </script>
+</body>
+
+</html>
